@@ -58,8 +58,3 @@ jobs:
           echo "Deployment completed successfully"
           EOF
 
-      - name: Debugging: Check Git Status
-        run: git status
-
-      - name: Debugging: Check Git Configuration
-        run: git config --list --show-origin
