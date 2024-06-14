@@ -37,7 +37,7 @@ jobs:
           ssh-add ~/.ssh/id_rsa
 
           # Increase SSH command timeout
-          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 user@your-server-ip 'bash -s' << 'EOF'
+          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 ishanhimalka@37.222.251.90 'bash -s' << 'EOF'
           set -e
 
           # Change to your project directory
