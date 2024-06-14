@@ -27,7 +27,7 @@ jobs:
 
       - name: Deploy to Server
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: sgBfiRUk+phfwX+StN6zYf98qiEp+JZ5ptVueXDknGM
         run: |
           # Set up SSH agent
           mkdir -p ~/.ssh
@@ -37,7 +37,7 @@ jobs:
           ssh-add ~/.ssh/id_rsa
 
           # Increase SSH command timeout
-          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 ishanhimalka@37.222.251.90 'bash -s' << 'EOF'
+          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 ishan himalka@37.222.251.90 'bash -s' << 'EOF'
           set -e
 
           # Change to your project directory
