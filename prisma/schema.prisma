@@ -1,61 +1,73 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       Int      @id @default(autoincrement())
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
   name     String
-  email    String   @unique
+  email    String @unique
+  contact  String
+  branch   String
   password String
-  role     Role
-  orders   Order[]
 }
 
-model Product {
-  id          Int        @id @default(autoincrement())
-  name        String
-  description String
-  price       Float
-  stock       Int
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  orderItems  OrderItem[]
-  inventory   Inventory[]
-}
-
-model Order {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  total     Float
-  userId    Int
-  user      User       @relation(fields: [userId], references: [id])
-  items     OrderItem[]
-}
-
-model OrderItem {
-  id        Int       @id @default(autoincrement())
-  quantity  Int
-  orderId   Int
-  productId Int
-  order     Order     @relation(fields: [orderId], references: [id])
-  product   Product   @relation(fields: [productId], references: [id])
+model Employer {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  role     String
+  contact  String
+  address  String
+  password String
 }
 
 model Inventory {
-  id        Int       @id @default(autoincrement())
-  productId Int
-  quantity  Int
-  product   Product   @relation(fields: [productId], references: [id])
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  quantity    Int
 }
 
-enum Role {
-  ADMIN
-  MANAGER
-  STAFF
-  CUSTOMER
+model MenuItem {
+  id          Int         @id @default(autoincrement())
+  name        String
+  ingredients String
+  price       Float
+  OrderItem   OrderItem[] // Relation to OrderItem
+}
+
+model Customer {
+  id       Int     @id @default(autoincrement())
+  name     String
+  contact  String
+  address  String
+  email    String @unique
+  password String
+  orders   Order[] // Relation to Order
+}
+
+model Order {
+  id           Int       @id @default(autoincrement())
+  customerId   Int
+  customer     Customer  @relation(fields: [customerId], references: [id])
+  datetime     DateTime
+  totalPrice   Float
+  discount     Float
+  mainFeatures String?
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  orderId    Int
+  order      Order    @relation(fields: [orderId], references: [id])
+  menuItemId Int
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  price      Float
 }
