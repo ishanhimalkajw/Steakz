@@ -27,16 +27,39 @@ jobs:
 
       - name: Deploy to Server
         env:
-          SSH_PRIVATE_KEY: sgBfiRUk+phfwX+StN6zYf98qiEp+JZ5ptVueXDknGM
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
+          # Set up SSH agent
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
 
-          ssh -o StrictHostKeyChecking=no ishanhimalka@37.222.251.90 'bash -s' << 'EOF'
+          # Increase SSH command timeout
+          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 user@your-server-ip 'bash -s' << 'EOF'
+          set -e
+
+          # Change to your project directory
           cd /path/to/your/app
+
+          # Pull latest changes
           git pull origin main
+
+          # Install dependencies
           npm install
+
+          # Run Prisma migrations
           npx prisma migrate deploy
+
+          # Restart the application
           pm2 restart all
+
+          echo "Deployment completed successfully"
           EOF
+
+      - name: Debugging: Check Git Status
+        run: git status
+
+      - name: Debugging: Check Git Configuration
+        run: git config --list --show-origin
